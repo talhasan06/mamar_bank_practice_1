@@ -5,8 +5,10 @@ from django.contrib.auth import login,logout
 from django.urls import reverse_lazy
 from django.views import View
 from django.contrib.auth.views import LoginView,LogoutView
+from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
+@csrf_protect
 class UserRegistrationFormView(FormView):
     template_name = 'accounts/user_registration.html'
     form_class = UserRegistrationForm
