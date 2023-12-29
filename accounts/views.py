@@ -5,6 +5,7 @@ from django.contrib.auth import login,logout
 from django.urls import reverse_lazy
 from django.views import View
 from django.contrib.auth.views import LoginView,LogoutView
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 class UserRegistrationFormView(FormView):
@@ -23,11 +24,14 @@ class UserLoginView(LoginView):
     def get_success_url(self):
         return reverse_lazy('home')
     
-class UserLogoutView(LogoutView):
-    def get_success_url(self):
-        if self.request.user.is_authenticated:
-            logout(self.request)
-            return reverse_lazy('home')
+class UserLogoutView(View):
+    # def get_success_url(self):
+    #     if self.request.user.is_authenticated:
+    #         logout(self.request)
+    #     return reverse_lazy('home')
+     def get(self, request):
+        logout(request)
+        return HttpResponseRedirect(reverse_lazy('home'))
 
 class UserBankAccountUpdateView(View):
     template_name = 'accounts/profile.html'
