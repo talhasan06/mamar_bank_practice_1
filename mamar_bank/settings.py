@@ -45,7 +45,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'mamar_bank.urls'
 
 TEMPLATES = [
