@@ -69,7 +69,7 @@ class TransferBalanceView(View):
 
             try:
                 source_account.transfer_balance(target_account_no, transfer_amount, request.user)
-                messages.success(request, "Success: Balance transferred successfully.")
+                messages.success(request, "Balance transferred successfully.")
 
             except ValidationError as e:
                 messages.error(request, str(e))
