@@ -123,6 +123,5 @@ class UserUpdateForm(forms.ModelForm):
         return user
     
 class TransferBalanceForm(forms.Form):
-    source_account_no = forms.IntegerField(label='Source Account Number')
     target_account_no = forms.IntegerField(label='Target Account Number')
     transfer_amount = forms.DecimalField(label='Transfer Amount')
