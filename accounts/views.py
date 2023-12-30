@@ -4,14 +4,17 @@ from .forms import UserRegistrationForm,UserUpdateForm
 from django.contrib.auth import login,logout
 from django.urls import reverse_lazy
 from django.views import View
+from django.contrib.auth import login
 from django.contrib.auth.views import LoginView,LogoutView
 from django.http import HttpResponseRedirect
+from .forms import TransferBalanceForm
+from .models import UserBankAccount
 
 # Create your views here.
 class UserRegistrationFormView(FormView):
     template_name = 'accounts/user_registration.html'
     form_class = UserRegistrationForm
-    success_url = reverse_lazy('register')
+    success_url = reverse_lazy('profile')
 
     def form_valid(self,form):
         user = form.save()
@@ -46,3 +49,29 @@ class UserBankAccountUpdateView(View):
             form.save()
             return redirect('profile')  # Redirect to the user's profile page
         return render(request, self.template_name, {'form': form})
+    
+class TransferBalanceView(View):
+    template_name = 'accounts/transfer_balance.html'
+
+    def get(self, request, *args, **kwargs):
+        form = TransferBalanceForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = TransferBalanceForm(request.POST)
+
+        if form.is_valid():
+            source_account_no = form.cleaned_data['source_account_no']
+            target_account_no = form.cleaned_data['target_account_no']
+            transfer_amount = form.cleaned_data['transfer_amount']
+
+            try:
+                source_account = UserBankAccount.objects.get(account_no=source_account_no)
+            except UserBankAccount.DoesNotExist:
+                result_message = "Error: Source account not found."
+            else:
+                result_message = source_account.transfer_balance(target_account_no, transfer_amount)
+
+            return render(request, self.template_name, {'form': form, 'result_message': result_message})
+
+        return render(request, self.template_name, {'form': form, 'result_message': 'Error: Invalid form data.'})

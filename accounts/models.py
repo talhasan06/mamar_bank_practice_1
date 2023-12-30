@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .constants import ACCOUNT_TYPE,GENDER_TYPE
-from .constants import ACCOUNT_TYPE,GENDER_TYPE
 
 class UserBankAccount(models.Model):
     user = models.OneToOneField(User,related_name='account',on_delete=models.CASCADE)
@@ -14,6 +13,23 @@ class UserBankAccount(models.Model):
 
     def __str__(self):
         return str(self.account_no)
+    
+    def transfer_balance(self, target_account_no, amount):
+        try:
+            target_account = UserBankAccount.objects.get(account_no=target_account_no)
+        except UserBankAccount.DoesNotExist:
+            return "Error: Target account not found."
+
+        if self.balance < amount:
+            return "Error: Insufficient balance for the transfer."
+
+        self.balance -= amount
+        target_account.balance += amount
+
+        self.save()
+        target_account.save()
+
+        return "Success: Balance transferred successfully."
     
 class UserAddress(models.Model):
     user = models.OneToOneField(User,related_name='address',on_delete=models.CASCADE)

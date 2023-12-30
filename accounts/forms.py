@@ -16,6 +16,7 @@ class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields=['username','password1','password2','first_name','last_name','email','account_type','birth_date','gender','postal_code','city','country','street_address']
+
     def save(self,commit=True):
         our_user = super().save(commit=False)
         if commit:
@@ -120,3 +121,8 @@ class UserUpdateForm(forms.ModelForm):
             user_address.save()
 
         return user
+    
+class TransferBalanceForm(forms.Form):
+    source_account_no = forms.IntegerField(label='Source Account Number')
+    target_account_no = forms.IntegerField(label='Target Account Number')
+    transfer_amount = forms.DecimalField(label='Transfer Amount')
