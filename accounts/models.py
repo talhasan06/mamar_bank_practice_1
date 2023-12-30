@@ -14,7 +14,8 @@ class UserBankAccount(models.Model):
     def __str__(self):
         return str(self.account_no)
     
-    def transfer_balance(self, target_account_no, amount):
+    def transfer_balance(self, target_account_no, amount,request_user):
+        source_account = self
         try:
             target_account = UserBankAccount.objects.get(account_no=target_account_no)
         except UserBankAccount.DoesNotExist:
@@ -23,10 +24,10 @@ class UserBankAccount(models.Model):
         if self.balance < amount:
             return "Error: Insufficient balance for the transfer."
 
-        self.balance -= amount
+        source_account.balance -= amount
         target_account.balance += amount
 
-        self.save()
+        source_account.save()
         target_account.save()
 
         return "Success: Balance transferred successfully."

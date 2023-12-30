@@ -61,16 +61,12 @@ class TransferBalanceView(View):
         form = TransferBalanceForm(request.POST)
 
         if form.is_valid():
-            source_account_no = form.cleaned_data['source_account_no']
             target_account_no = form.cleaned_data['target_account_no']
             transfer_amount = form.cleaned_data['transfer_amount']
 
-            try:
-                source_account = UserBankAccount.objects.get(account_no=source_account_no)
-            except UserBankAccount.DoesNotExist:
-                result_message = "Error: Source account not found."
-            else:
-                result_message = source_account.transfer_balance(target_account_no, transfer_amount)
+            source_account = request.user.account
+
+            result_message = source_account.transfer_balance(target_account_no, transfer_amount, request.user)
 
             return render(request, self.template_name, {'form': form, 'result_message': result_message})
 
