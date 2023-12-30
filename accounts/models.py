@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .constants import ACCOUNT_TYPE,GENDER_TYPE
+from django.core.exceptions import ValidationError
 
 class UserBankAccount(models.Model):
     user = models.OneToOneField(User,related_name='account',on_delete=models.CASCADE)
@@ -19,10 +20,11 @@ class UserBankAccount(models.Model):
         try:
             target_account = UserBankAccount.objects.get(account_no=target_account_no)
         except UserBankAccount.DoesNotExist:
-            return "Error: Target account not found."
+            raise ValidationError("Error: Target account not found.")
+            # return "Error: Target account not found."
 
         if self.balance < amount:
-            return "Error: Insufficient balance for the transfer."
+            raise ValidationError("Error: Insufficient balance for the transfer.")
 
         source_account.balance -= amount
         target_account.balance += amount

@@ -8,8 +8,8 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from .forms import TransferBalanceForm
-
-
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 
 # Create your views here.
 class UserRegistrationFormView(FormView):
@@ -67,9 +67,14 @@ class TransferBalanceView(View):
 
             source_account = request.user.account
 
-            result_message = source_account.transfer_balance(target_account_no, transfer_amount, request.user)
+            try:
+                source_account.transfer_balance(target_account_no, transfer_amount, request.user)
+                messages.success(request, "Success: Balance transferred successfully.")
 
-            return render(request, self.template_name, {'form': form, 'result_message': result_message})
+            except ValidationError as e:
+                messages.error(request, str(e))
 
-        return render(request, self.template_name, {'form': form, 'result_message': 'Error: Invalid form data.'})
+            return render(request, self.template_name, {'form': form})
+
+        return render(request, self.template_name, {'form': form})
     
