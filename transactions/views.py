@@ -84,7 +84,7 @@ class WithdrawMoneyView(TransactionCreateMixin):
     def form_valid(self,form):
         amount = form.cleaned_data.get('amount')
         account = self.request.user.account
-        if Bank.is_bankrupt:
+        if Bank.is_bankrupt==True:
             messages.error(self.request, "Error: The bank is bankrupt. Withdrawals are not allowed.")
             return self.form_invalid(form)
         if amount <= account.balance:
