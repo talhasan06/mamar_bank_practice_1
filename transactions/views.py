@@ -20,7 +20,6 @@ from transactions.forms import (
     LoanRequestForm,
 )
 from transactions.models import Transaction
-from accounts.models import Bank
 
 def send_transaction_email(user,amount,subject,template):
         message = render_to_string(template,{
@@ -76,7 +75,7 @@ class DepositMoneyView(TransactionCreateMixin):
 class WithdrawMoneyView(TransactionCreateMixin):
     form_class = WithdrawForm
     title = 'Withdraw Money'
- 
+    
     def get_initial(self):
         initial = {'transaction_type':WITHDRAWAL}
         return initial
@@ -84,9 +83,7 @@ class WithdrawMoneyView(TransactionCreateMixin):
     def form_valid(self,form):
         amount = form.cleaned_data.get('amount')
         account = self.request.user.account
-        if Bank.is_bankrupt==True:
-            messages.error(self.request, "Error: The bank is bankrupt. Withdrawals are not allowed.")
-            return self.form_invalid(form)
+
         if amount <= account.balance:
             account.balance -= amount
             account.save(

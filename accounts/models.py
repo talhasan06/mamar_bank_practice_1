@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from .constants import ACCOUNT_TYPE,GENDER_TYPE
 
-class Bank(models.Model):
-    is_bankrupt = models.BooleanField(default=False)
-
 class UserBankAccount(models.Model):
     user = models.OneToOneField(User,related_name='account',on_delete=models.CASCADE)
     account_type = models.CharField(max_length=10,choices=ACCOUNT_TYPE)

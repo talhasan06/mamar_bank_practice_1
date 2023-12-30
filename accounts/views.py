@@ -5,10 +5,11 @@ from django.contrib.auth import login,logout
 from django.urls import reverse_lazy
 from django.views import View
 from django.contrib.auth import login
-from django.contrib.auth.views import LoginView,LogoutView
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from .forms import TransferBalanceForm
-from .models import UserBankAccount
+
+
 
 # Create your views here.
 class UserRegistrationFormView(FormView):
@@ -71,3 +72,4 @@ class TransferBalanceView(View):
             return render(request, self.template_name, {'form': form, 'result_message': result_message})
 
         return render(request, self.template_name, {'form': form, 'result_message': 'Error: Invalid form data.'})
+    

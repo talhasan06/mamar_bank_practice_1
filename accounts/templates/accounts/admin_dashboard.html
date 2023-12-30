@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- Your existing admin dashboard content -->
+
+  <h3>Set Bankrupt Status</h3>
+  <ul>
+    {% for user_profile in user_profiles %}
+      <li><a href="{% url 'set_bankrupt_status' user_id=user_profile.user.id %}">{{ user_profile.user.username }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}
